@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -16,11 +17,15 @@ public class BookConfig {
             Libro libro1 = new Libro("It","S.King",1993, "linkamazon");
             Libro libro2 = new Libro("Shining","S.King",1991, "linkamazon");
 
+            List<Libro> temp= new ArrayList<>();
+            temp.add(libro1);
+            temp.add(libro2);
+
 
             repository.deleteAll();
 
             repository.saveAll(
-                    List.of(libro1,libro2)
+                    temp
             );
         };
 

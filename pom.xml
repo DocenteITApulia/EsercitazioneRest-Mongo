@@ -13,9 +13,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>EsercitazioneRest-Mongo</name>
 	<description>Svolgimento esercitazione con REST e db mongodb</description>
-	<properties>
-		<java.version>16</java.version>
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
