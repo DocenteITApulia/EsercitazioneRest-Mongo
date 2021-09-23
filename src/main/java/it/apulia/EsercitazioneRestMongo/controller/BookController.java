@@ -1,11 +1,14 @@
 package it.apulia.EsercitazioneRestMongo.controller;
 
 import it.apulia.EsercitazioneRestMongo.model.Libro;
+import it.apulia.EsercitazioneRestMongo.myexceptions.MyNotFoundExcp;
 import it.apulia.EsercitazioneRestMongo.services.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.websocket.server.PathParam;
@@ -31,8 +34,13 @@ public class BookController {
 
 
     @GetMapping("/library/{autore}")
-    public ResponseEntity<List<Libro>> getLibriByAutore(@PathVariable String autore){
-        return ResponseEntity.ok().body(bookService.getLibriByAutore(autore));
+    public ResponseEntity<?> getLibriByAutore(@PathVariable String autore){
+        try{
+            List<Libro> temp = bookService.getLibriByAutore(autore);
+            return ResponseEntity.ok().body(temp);
+        }catch(MyNotFoundExcp excp){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(excp.getMessage());
+        }
     }
 
 
@@ -42,8 +50,12 @@ public class BookController {
     }
 
     @GetMapping("/ricerca/{autore}/{titolo}")
-    public ResponseEntity<Libro> getLibro(@PathVariable String autore, @PathVariable String titolo){
-        return ResponseEntity.ok().body(bookService.getLibro(autore,titolo));
+    public ResponseEntity<?> getLibro(@PathVariable String autore, @PathVariable String titolo){
+        Libro temp = bookService.getLibro(autore,titolo);
+        if(!(temp==null))
+            return ResponseEntity.ok().body(temp);
+        else //è un esempio
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Non è presente alcun autore con il nome indicato");
     }
 
     @PostMapping("/library")
@@ -61,7 +73,11 @@ public class BookController {
 
     @GetMapping("/{bookId}")
     public ResponseEntity<Libro> getLibroById(@PathVariable String bookId){
-        return ResponseEntity.ok().body(bookService.getLibro(bookId));
+        Libro temp = bookService.getLibro(bookId);
+        if(!(temp==null))
+            return ResponseEntity.ok().body(temp);
+        else
+            return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{autore}/{titolo}")

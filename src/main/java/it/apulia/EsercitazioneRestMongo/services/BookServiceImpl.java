@@ -1,6 +1,7 @@
 package it.apulia.EsercitazioneRestMongo.services;
 
 import it.apulia.EsercitazioneRestMongo.model.Libro;
+import it.apulia.EsercitazioneRestMongo.myexceptions.MyNotFoundExcp;
 import it.apulia.EsercitazioneRestMongo.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,11 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Libro> getLibriByAutore(String nomeAutore) {
 
-        return bookRepository.findLibriByAutore(nomeAutore);
+        List<Libro> temp = bookRepository.findLibriByAutore(nomeAutore);
+        if(temp.isEmpty())
+            throw new MyNotFoundExcp("L'autore non è presente all'interno del db");
+
+        return temp;
     }
 
     @Override
